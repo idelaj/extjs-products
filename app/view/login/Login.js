@@ -3,7 +3,8 @@ Ext.define('ProductsApp.view.login.Login', {
     xtype: 'login',
 
     requires: [
-        'Ext.form.Panel'
+        'Ext.form.Panel',
+        'ProductsApp.view.Main'
     ],
 
     title: 'Авторизация',
@@ -56,9 +57,14 @@ Ext.define('ProductsApp.view.login.Login', {
                     errorText.hide();
 
                     if (values.username === 'admin' && values.password === 'padmin') {
-                        Ext.Msg.alert('Успех', 'Вы вошли!');
-                        form.reset();
-                        // TODO: main page
+                        var viewport = Ext.ComponentQuery.query('viewport')[0];
+                        viewport.destroy();
+                        Ext.create('Ext.container.Viewport', {
+                            layout: 'fit',
+                            items: [{
+                                xtype: 'app-main'
+                            }]
+                        });
                     } else {
                         form.markInvalid({
                             username: 'Неверный логин/пароль',
