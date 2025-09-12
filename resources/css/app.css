@@ -1,36 +1,48 @@
-/* Center the root viewport content */
-html, body {
-  height: 100%;
-}
-
-.auth-card {
-  max-width: 420px;
-  width: 100%;
-  margin: 0 auto;
-  box-shadow: 0 18px 40px rgba(18, 38, 63, 0.18);
-  border-radius: 8px;
-}
-
-.auth-card .x-panel-body-default {
-  background-color: #ffffff;
-}
-
-.centered-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 24px;
-  background-color: #f4f7fb;
-}
-
-.toggle-link-btn.x-btn-default-small {
-  background: transparent;
-  border: none;
-  color: #1a73e8;
-  box-shadow: none;
-}
-
-.toggle-link-btn .x-btn-inner {
-  text-decoration: underline;
-}
+body {
+    background: #f5f8fc;
+  }
+  
+  .login-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .login-card .x-panel-header {
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .login-card .x-toolbar-footer,
+  .login-card .x-form-buttons {
+    background: transparent;
+    border: none;
+  }
+  
+  .login-card .x-form-buttons .x-btn {
+    background: #1a73e8;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .login-card .x-form-buttons .x-btn:hover {
+    background: #1557b0;
+  }
+  
+  .login-card .x-form-buttons .x-btn:active {
+    background: #0d47a1;
+  }
+  
+  .login-card .x-form-buttons .x-btn-inner {
+    color: white;
+  }
+  
+  .login-card .x-form-field.x-form-invalid {
+    border-color: #c62828;
+    background-color: #ffebee;
+  }
+  
+  .login-card .x-panel-body {
+    border: none;
+  }
+  
