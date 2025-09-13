@@ -46,7 +46,7 @@ body {
     border: none;
 }
 
-/* Main page styling - THIS WAS MISSING! */
+/* Main page styling */
 .main-header {
     background: #5EA3DD !important;
     border: none !important;
@@ -55,10 +55,30 @@ body {
 .header-link {
     color: white !important;
     cursor: pointer !important;
-    text-decoration: underline !important;
+    text-decoration: none !important;
 }
 
 .header-link:hover {
+    color: #e0e0e0 !important;
+}
+
+/* Header button styling */
+.header-link .x-btn-inner {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.header-link .x-btn {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+}
+
+.header-link .x-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.header-link .x-btn:hover .x-btn-inner {
     color: #e0e0e0 !important;
 }
 
@@ -124,4 +144,85 @@ body {
 .x-window-body {
     border: none !important;
 }
-  
+
+/* Products grid styling */
+.products-filter-panel {
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.products-filter-panel .x-panel-header {
+    background: #5EA3DD !important;
+    color: white !important;
+    border: none !important;
+}
+
+.products-filter-panel .x-panel-header-text {
+    color: white !important;
+    font-weight: bold !important;
+}
+
+/* Grid styling */
+.x-grid-cell {
+    border-right: 1px solid #e1e5e9 !important;
+}
+
+.x-grid-header-ct {
+    background: #f8f9fa !important;
+    border-bottom: 2px solid #5EA3DD !important;
+}
+
+.x-column-header {
+    background: #f8f9fa !important;
+    border-right: 1px solid #dee2e6 !important;
+    font-weight: bold !important;
+    color: #495057 !important;
+}
+
+.x-tab-bar {
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.x-tab {
+    background: #4c82b1 !important;
+    border: none !important;
+    margin-right: 2px !important;
+    color: white !important;
+}
+
+.x-tab-active {
+    background: white !important;
+    border: 2px solid #5EA3DD !important;
+    border-bottom: 2px solid white !important;
+    color: #495057 !important;
+}
+
+.x-tab-close-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #6c757d !important;
+}
+
+.x-tab-close-btn:hover {
+    color: #dc3545 !important;
+}
+
+/* Product card styling */
+.x-window .x-form-display-field {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+}
+
+/* Quantity zero styling */
+.qty-zero {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    min-width: 24px;
+    text-align: center;
+}

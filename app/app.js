@@ -2,10 +2,11 @@ Ext.application({
   name: 'ProductsApp',
 
   requires: [
-    'ProductsApp.view.login.Login',
-    'ProductsApp.view.Main',
-    'ProductsApp.store.ProductsStore',
-    'ProductsApp.model.Product'
+      'ProductsApp.view.login.Login',
+      'ProductsApp.view.Main',
+      'ProductsApp.view.products.ProductsGrid',
+      'ProductsApp.model.Product',
+      'ProductsApp.store.ProductsStore'
   ],
 
   launch: function () {
