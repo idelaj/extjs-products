@@ -2,16 +2,49 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
     extend: 'Ext.panel.Panel',
     xtype: 'products-grid',
 
-    layout: 'vbox',
+    layout: 'absolute',
+    height: '100%',
+    width: '100%',
+    cls: 'products-grid',
+    
+    initComponent: function() {
+        console.log('ProductsGrid initComponent called');
+        this.callParent(arguments);
+        console.log('ProductsGrid after callParent');
+    },
+    
+    listeners: {
+        afterrender: function(panel) {
+            console.log('ProductsGrid afterrender called');
+            console.log('ProductsGrid DOM element:', panel.el);
+            console.log('ProductsGrid items count:', panel.items.length);
+            console.log('ProductsGrid visible:', panel.isVisible());
+            console.log('ProductsGrid height:', panel.getHeight());
+            
+            // Check each item
+            panel.items.each(function(item, index) {
+                console.log('Item ' + index + ':', item.xtype, 'visible:', item.isVisible(), 'height:', item.getHeight());
+            });
+        }
+    },
     
     items: [
         {
             xtype: 'panel',
+            x: 10,
+            y: 10,
+            width: 'calc(100% - 20px)',
             height: 120,
             bodyPadding: 10,
-            title: 'Список товаров',
+            title: 'Фильтры',
             cls: 'products-filter-panel',
             layout: 'vbox',
+            listeners: {
+                afterrender: function(panel) {
+                    console.log('Filter panel afterrender called');
+                    console.log('Filter panel items count:', panel.items.length);
+                }
+            },
             items: [
                 {
                     xtype: 'container',
@@ -26,6 +59,7 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                             fieldLabel: 'ID:',
                             name: 'idFilter',
                             width: 200,
+                            emptyText: 'Введите фильтр...',
                             enableKeyEvents: true,
                             listeners: {
                                 keydown: function(field, e) {
@@ -56,21 +90,17 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
         },
         {
             xtype: 'grid',
-            flex: 1,
+            x: 10,
+            y: 140,
+            width: 'calc(100% - 20px)',
+            height: 250,
             reference: 'productsGrid',
             store: {
                 fields: ['id', 'name', 'description', 'price', 'quantity'],
                 data: [
-                    { id: 1, name: 'Ноутбук Dell', description: 'Игровой ноутбук Dell Inspiron 15', price: 45000.00, quantity: 5 },
-                    { id: 2, name: 'Мышь Logitech', description: 'Беспроводная мышь Logitech MX Master', price: 3500.00, quantity: 0 },
-                    { id: 3, name: 'Клавиатура Razer', description: 'Механическая клавиатура Razer BlackWidow', price: 8000.00, quantity: 12 },
-                    { id: 4, name: 'Монитор Samsung', description: '27-дюймовый монитор Samsung 4K', price: 25000.00, quantity: 3 },
-                    { id: 5, name: 'Наушники Sony', description: 'Беспроводные наушники Sony WH-1000XM4', price: 15000.00, quantity: 0 },
-                    { id: 6, name: 'Веб-камера Logitech', description: 'Веб-камера Logitech C920 HD Pro', price: 4500.00, quantity: 8 },
-                    { id: 7, name: 'Принтер HP', description: 'Лазерный принтер HP LaserJet Pro', price: 12000.00, quantity: 2 },
-                    { id: 8, name: 'Планшет iPad', description: 'Планшет Apple iPad Air 10.9', price: 35000.00, quantity: 0 },
-                    { id: 9, name: 'Смартфон iPhone', description: 'Смартфон Apple iPhone 13', price: 55000.00, quantity: 15 },
-                    { id: 10, name: 'SSD накопитель', description: 'SSD накопитель Samsung 1TB', price: 6000.00, quantity: 20 }
+                    { id: 1, name: 'Notebook Lenovo', description: 'Ноутбук ThinkPad T460 14"FH...', price: 100.00, quantity: 2 },
+                    { id: 2, name: 'Keyboard OKLICK', description: 'Клавиатура OKLICK 140M, US...', price: 50.00, quantity: 8 },
+                    { id: 3, name: 'Network adapter', description: 'Сетевой адаптер WiFi D-Link ...', price: 7.00, quantity: 0 }
                 ]
             },
             columns: [
@@ -93,10 +123,11 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                             element: 'el',
                             delegate: '.x-grid-cell',
                             fn: function(e, t) {
-                                var view = this.up('grid').getView();
+                                var grid = this.up('grid');
+                                var view = grid.getView();
                                 var record = view.getRecord(t);
                                 if (record) {
-                                    this.showProductCard(record);
+                                    this.up('products-grid').showProductCard(record);
                                 }
                             }
                         }
@@ -111,10 +142,7 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                     text: 'Цена',
                     dataIndex: 'price',
                     width: 100,
-                    align: 'right',
-                    renderer: function(value) {
-                        return Ext.util.Format.number(value, '0,000.00');
-                    }
+                    align: 'right'
                 },
                 {
                     text: 'Кол-во',
@@ -189,7 +217,7 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                     },
                     {
                         fieldLabel: 'Цена',
-                        value: Ext.util.Format.number(record.get('price'), '0,000.00') + ' руб.'
+                        value: record.get('price') + ' руб.'
                     },
                     {
                         fieldLabel: 'Количество',

@@ -149,6 +149,36 @@ body {
 .products-filter-panel {
     background: #f8f9fa !important;
     border-bottom: 1px solid #dee2e6 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* ProductsGrid styling */
+.products-grid {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: 100% !important;
+    width: 100% !important;
+    min-height: 400px !important;
+}
+
+/* Filter panel styling */
+.products-filter-panel {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Grid styling */
+.x-grid {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: 300px !important;
 }
 
 .products-filter-panel .x-panel-header {
