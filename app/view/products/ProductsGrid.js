@@ -63,6 +63,30 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                             }
                         }
                     }
+                },
+                {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    margin: '10 0 0 0',
+                    items: [
+                        {
+                            xtype: 'button',
+                            text: 'Применить фильтры',
+                            cls: 'product-card-button save-button',
+                            margin: '0 10 0 0',
+                            handler: function() {
+                                this.up('products-grid').applyFilters();
+                            }
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Очистить фильтры',
+                            cls: 'product-card-button cancel-button',
+                            handler: function() {
+                                this.up('products-grid').clearFilters();
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -97,7 +121,7 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                     }
                 }
             },
-            store: Ext.create('Ext.data.Store', {
+            store: this.store || Ext.create('Ext.data.Store', {
                 fields: ['id', 'name', 'description', 'price', 'quantity'],
                 pageSize: 5,
                 autoLoad: true,
@@ -175,24 +199,86 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
         var idField = this.down('[name=idFilter]');
         var descField = this.down('[name=descriptionFilter]');
         
-        store.clearFilter();
+        // Get filter values
+        var idValue = idField.getValue();
+        var descValue = descField.getValue();
         
-        if (idField.getValue()) {
-            store.addFilter({
-                property: 'id',
-                value: parseInt(idField.getValue()),
-                exactMatch: true
-            });
+        // If both fields are empty, restore original data
+        if (!idValue && !descValue) {
+            this.clearFilters();
+            return;
         }
         
-        if (descField.getValue()) {
-            store.addFilter({
-                property: 'description',
-                value: descField.getValue(),
-                anyMatch: true,
-                caseSensitive: false
-            });
+        // Get original data for filtering
+        var originalData = this.getOriginalData();
+        var filteredData = [];
+        
+        // Apply filters to the complete dataset
+        for (var i = 0; i < originalData.length; i++) {
+            var record = originalData[i];
+            var matches = true;
+            
+            // Check ID filter
+            if (idValue) {
+                var idNum = parseInt(idValue);
+                if (record.id !== idNum) {
+                    matches = false;
+                }
+            }
+            
+            // Check description filter
+            if (descValue && matches) {
+                var descLower = descValue.toLowerCase();
+                var description = (record.description || '').toLowerCase();
+                if (description.indexOf(descLower) === -1) {
+                    matches = false;
+                }
+            }
+            
+            if (matches) {
+                filteredData.push(record);
+            }
         }
+        
+        // Replace the store's data with filtered results
+        store.getProxy().setData(filteredData);
+        
+        // Reload the store to show filtered results
+        store.loadPage(1);
+    },
+
+    clearFilters: function() {
+        var grid = this.down('grid');
+        var store = grid.getStore();
+        var idField = this.down('[name=idFilter]');
+        var descField = this.down('[name=descriptionFilter]');
+        
+        // Clear filter fields
+        if (idField) idField.setValue('');
+        if (descField) descField.setValue('');
+        
+        // Restore original data
+        var originalData = this.getOriginalData();
+        
+        store.getProxy().setData(originalData);
+        store.loadPage(1);
+    },
+
+    getOriginalData: function() {
+        return [
+            { id: 1, name: 'Notebook Lenovo', description: 'Ноутбук Lenovo ThinkPad T460, 14-дюймовый экран Full HD, процессор Intel Core i5, 8 ГБ оперативной памяти, SSD 256 ГБ, Windows 10 Pro.', price: 100.00, quantity: 2 },
+            { id: 2, name: 'Keyboard OKLICK', description: 'Клавиатура OKLICK 140M, классическая мембранная с полноразмерной раскладкой, интерфейс USB, английская и русская раскладка.', price: 50.00, quantity: 8 },
+            { id: 3, name: 'Network adapter', description: 'Сетевой адаптер WiFi D-Link DWA-131, стандарты IEEE 802.11n/g/b, частота 2.4 ГГц, скорость до 300 Мбит/с, компактный форм-фактор USB.', price: 7.00, quantity: 0 },
+            { id: 4, name: 'Ноутбук Dell', description: 'Игровой ноутбук Dell Inspiron 15, экран 15.6 дюймов Full HD, процессор Intel Core i7, видеокарта NVIDIA GeForce GTX 1650, 16 ГБ RAM, SSD 512 ГБ.', price: 45000.00, quantity: 5 },
+            { id: 5, name: 'Мышь Logitech', description: 'Беспроводная мышь Logitech MX Master с сенсором высокой точности, эргономичным дизайном и возможностью работы по Bluetooth и через USB-ресивер.', price: 3500.00, quantity: 0 },
+            { id: 6, name: 'Клавиатура Razer', description: 'Механическая клавиатура Razer BlackWidow с подсветкой Chroma RGB, переключатели Razer Green, программируемые макросы, игровой режим.', price: 8000.00, quantity: 12 },
+            { id: 7, name: 'Монитор Samsung', description: '27-дюймовый монитор Samsung с разрешением 4K UHD (3840x2160), матрица IPS, поддержка HDR10, частота обновления 60 Гц, интерфейсы HDMI и DisplayPort.', price: 25000.00, quantity: 3 },
+            { id: 8, name: 'Наушники Sony', description: 'Беспроводные наушники Sony WH-1000XM4 с активным шумоподавлением, Bluetooth 5.0, поддержкой LDAC, временем работы до 30 часов и быстрой зарядкой.', price: 15000.00, quantity: 0 },
+            { id: 9, name: 'Веб-камера Logitech', description: 'Веб-камера Logitech C920 HD Pro, запись в формате Full HD 1080p, автофокус, стереомикрофоны, поддержка Skype и Zoom, крепление на монитор или штатив.', price: 4500.00, quantity: 8 },
+            { id: 10, name: 'Принтер HP', description: 'Лазерный принтер HP LaserJet Pro M404dn, скорость печати до 38 стр/мин, автоподача бумаги, поддержка двусторонней печати, интерфейсы USB и Ethernet.', price: 12000.00, quantity: 2 },
+            { id: 11, name: 'Планшет iPad', description: 'Планшет Apple iPad Air 10.9, процессор Apple M1, 64 ГБ встроенной памяти, дисплей Liquid Retina с поддержкой Apple Pencil и Magic Keyboard.', price: 35000.00, quantity: 0 },
+            { id: 12, name: 'Смартфон iPhone', description: 'Смартфон Apple iPhone 13 с 6.1-дюймовым OLED-дисплеем Super Retina XDR, процессором A15 Bionic, двойной камерой 12 Мп и поддержкой 5G.', price: 55000.00, quantity: 15 }
+        ];
     },
 
     showProductCard: function(record) {
