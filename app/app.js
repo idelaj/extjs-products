@@ -5,8 +5,7 @@ Ext.application({
       'ProductsApp.view.login.Login',
       'ProductsApp.view.Main',
       'ProductsApp.view.products.ProductsGrid',
-      'ProductsApp.model.Product',
-      'ProductsApp.store.ProductsStore'
+      'ProductsApp.model.Product'
   ],
 
   launch: function () {
