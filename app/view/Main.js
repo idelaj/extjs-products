@@ -107,8 +107,6 @@ Ext.define('ProductsApp.view.Main', {
         var me = this;
         var tabPanel = me.down('tabpanel');
     
-        console.log('openProductsTab called, tabPanel:', tabPanel);
-    
         if (!tabPanel) {
             Ext.Msg.alert('Ошибка', 'TabPanel не найден!');
             return;
@@ -117,8 +115,6 @@ Ext.define('ProductsApp.view.Main', {
         var tabTitle = 'Товары ' + me.tabCounter++;
         
         try {
-            console.log('Creating new tab with title:', tabTitle);
-            
             var newTab = tabPanel.add({
                 title: tabTitle,
                 closable: true,
@@ -127,7 +123,6 @@ Ext.define('ProductsApp.view.Main', {
                     xtype: 'products-grid'
                 }]
             });
-            console.log('New tab created:', newTab);
             tabPanel.setActiveTab(newTab);
         } catch (error) {
             console.error('Error creating tab:', error);

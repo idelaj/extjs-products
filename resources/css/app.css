@@ -132,9 +132,11 @@ body {
     background: #4a8bc4 !important;
 }
 
-/* Remove all borders from dialog */
+/* Remove all borders from dialog and ensure rounded edges */
 .x-window {
     border: none !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
 }
 
 .x-window-header {
@@ -143,6 +145,13 @@ body {
 
 .x-window-body {
     border: none !important;
+}
+
+/* Ensure all window close buttons are hidden */
+.x-window-header .x-tool-close,
+.x-window-header .x-tool,
+.x-tool-close {
+    display: none !important;
 }
 
 /* Products grid styling */
@@ -255,4 +264,181 @@ body {
     display: inline-block;
     min-width: 24px;
     text-align: center;
+}
+
+/* Product card dialog styling - matches exit window */
+.product-card-dialog {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+.product-card-dialog .x-window-header {
+    background: #5EA3DD !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 15px 20px !important;
+}
+
+.product-card-dialog .x-window-header-text {
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.product-card-dialog .x-window-body {
+    background: white !important;
+    border: none !important;
+    border-radius: 0 0 10px 10px !important;
+    padding: 0 !important;
+}
+
+.product-card-dialog .x-window-header .x-tool-close {
+    display: none !important;
+}
+
+/* Product card form fields - matches login form styling */
+.product-card-field {
+    margin-bottom: 15px !important;
+}
+
+.product-card-field .x-form-display-field {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+}
+
+.editable-field .x-form-field {
+    background: white !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+}
+
+.editable-field .x-form-field:focus {
+    border-color: #5EA3DD !important;
+    box-shadow: 0 0 0 2px rgba(94, 163, 221, 0.2) !important;
+}
+
+.editable-field .x-form-field.x-form-invalid {
+    border-color: #c62828 !important;
+    background-color: #ffebee !important;
+}
+
+/* Product card buttons - matches login form button styling */
+.product-card-button {
+    border-radius: 4px !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    min-width: 100px !important;
+    margin: 0 5px !important;
+}
+
+.cancel-button {
+    background: #6c757d !important;
+    border: none !important;
+    color: white !important;
+}
+
+.cancel-button:hover {
+    background: #5a6268 !important;
+}
+
+.save-button {
+    background: #5EA3DD !important;
+    border: none !important;
+    color: white !important;
+}
+
+.save-button:hover {
+    background: #4a8bc4 !important;
+}
+
+.save-button:disabled {
+    background: #e9ecef !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+}
+
+/* Form validation messages */
+.x-form-error-msg {
+    color: #c62828 !important;
+    font-size: 12px !important;
+    margin-top: 4px !important;
+}
+
+/* Ext.Msg dialog styling - matches exit window */
+.x-message-box {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+.x-message-box .x-window-header {
+    background: #5EA3DD !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 15px 20px !important;
+}
+
+.x-message-box .x-window-header-text {
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.x-message-box .x-window-body {
+    background: white !important;
+    border: none !important;
+    border-radius: 0 0 10px 10px !important;
+    padding: 20px !important;
+}
+
+.x-message-box .x-window-header .x-tool-close,
+.x-message-box .x-tool-close,
+.x-message-box .x-window-header .x-tool {
+    display: none !important;
+}
+
+/* Message box buttons */
+.x-message-box .x-btn {
+    background: #5EA3DD !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 4px !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    min-width: 80px !important;
+    margin: 0 5px !important;
+}
+
+.x-message-box .x-btn:hover {
+    background: #4a8bc4 !important;
+}
+
+.x-message-box .x-btn:focus {
+    background: #4a8bc4 !important;
+}
+
+/* Remove message box icons */
+.x-message-box .x-message-box-icon {
+    display: none !important;
+}
+
+.x-message-box .x-message-box-body {
+    padding-left: 0 !important;
+}
+
+/* Message box text styling */
+.x-message-box .x-message-box-text {
+    color: #333 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }

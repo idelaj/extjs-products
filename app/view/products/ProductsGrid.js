@@ -8,23 +8,11 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
     cls: 'products-grid',
     
     initComponent: function() {
-        console.log('ProductsGrid initComponent called');
         this.callParent(arguments);
-        console.log('ProductsGrid after callParent');
     },
     
     listeners: {
         afterrender: function(panel) {
-            console.log('ProductsGrid afterrender called');
-            console.log('ProductsGrid DOM element:', panel.el);
-            console.log('ProductsGrid items count:', panel.items.length);
-            console.log('ProductsGrid visible:', panel.isVisible());
-            console.log('ProductsGrid height:', panel.getHeight());
-            
-            // Check each item
-            panel.items.each(function(item, index) {
-                console.log('Item ' + index + ':', item.xtype, 'visible:', item.isVisible(), 'height:', item.getHeight());
-            });
         }
     },
     
@@ -41,8 +29,6 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
             layout: 'vbox',
             listeners: {
                 afterrender: function(panel) {
-                    console.log('Filter panel afterrender called');
-                    console.log('Filter panel items count:', panel.items.length);
                 }
             },
             items: [
@@ -93,18 +79,21 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                 displayInfo: true,
                 displayMsg: 'Показано {0} - {1} из {2}',
                 emptyMsg: 'Нет данных для отображения',
-                store: null // Will be set after store is created
+                store: null
             }],
             listeners: {
                 afterrender: function(grid) {
-                    // Bind the paging toolbar to the store
                     var pagingToolbar = grid.down('pagingtoolbar');
                     var store = grid.getStore();
                     
                     if (pagingToolbar && store) {
                         pagingToolbar.bindStore(store);
-                        // Ensure pagination is working
                         store.loadPage(1);
+                    }
+                },
+                cellclick: function(view, cell, cellIndex, record, row, rowIndex, e) {
+                    if (cellIndex === 1) {
+                        this.up('products-grid').showProductCard(record);
                     }
                 }
             },
@@ -145,20 +134,6 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
                     renderer: function(value, metaData, record) {
                         metaData.style = 'cursor: pointer; text-decoration: underline; color: blue;';
                         return value;
-                    },
-                    listeners: {
-                        click: {
-                            element: 'el',
-                            delegate: '.x-grid-cell',
-                            fn: function(e, t) {
-                                var grid = this.up('grid');
-                                var view = grid.getView();
-                                var record = view.getRecord(t);
-                                if (record) {
-                                    this.up('products-grid').showProductCard(record);
-                                }
-                            }
-                        }
                     }
                 },
                 {
@@ -221,50 +196,152 @@ Ext.define('ProductsApp.view.products.ProductsGrid', {
     },
 
     showProductCard: function(record) {
-        Ext.create('Ext.window.Window', {
+        var me = this;
+        var originalData = {
+            price: record.get('price'),
+            quantity: record.get('quantity')
+        };
+        
+        var productCard = Ext.create('Ext.window.Window', {
             title: 'Карточка товара: ' + record.get('name'),
-            width: 400,
-            height: 300,
+            width: 450,
+            height: 400,
             modal: true,
             resizable: false,
+            closable: false,
+            cls: 'product-card-dialog',
             layout: 'fit',
             items: [{
                 xtype: 'form',
+                reference: 'productForm',
                 bodyPadding: 20,
                 defaults: {
-                    xtype: 'displayfield',
-                    labelWidth: 100,
-                    anchor: '100%'
+                    labelWidth: 120,
+                    anchor: '100%',
+                    msgTarget: 'side'
                 },
                 items: [
                     {
+                        xtype: 'displayfield',
                         fieldLabel: 'ID',
-                        value: record.get('id')
+                        value: record.get('id'),
+                        cls: 'product-card-field'
                     },
                     {
-                        fieldLabel: 'Название',
-                        value: record.get('name')
+                        xtype: 'displayfield',
+                        fieldLabel: 'Наименование',
+                        value: record.get('name'),
+                        cls: 'product-card-field'
                     },
                     {
+                        xtype: 'displayfield',
                         fieldLabel: 'Описание',
-                        value: record.get('description')
+                        value: record.get('description'),
+                        cls: 'product-card-field'
                     },
                     {
+                        xtype: 'numberfield',
+                        name: 'price',
                         fieldLabel: 'Цена',
-                        value: record.get('price') + ' руб.'
+                        value: record.get('price'),
+                        minValue: 0,
+                        allowDecimals: true,
+                        decimalPrecision: 2,
+                        allowBlank: false,
+                        emptyText: 'Введите цену...',
+                        cls: 'product-card-field editable-field',
+                        listeners: {
+                            change: function(field, newValue) {
+                                me.checkForChanges(productCard, originalData);
+                            }
+                        }
                     },
                     {
-                        fieldLabel: 'Количество',
-                        value: record.get('quantity') + ' шт.'
+                        xtype: 'numberfield',
+                        name: 'quantity',
+                        fieldLabel: 'Кол-во',
+                        value: record.get('quantity'),
+                        minValue: 0,
+                        allowDecimals: false,
+                        allowBlank: false,
+                        emptyText: 'Введите количество...',
+                        cls: 'product-card-field editable-field',
+                        listeners: {
+                            change: function(field, newValue) {
+                                me.checkForChanges(productCard, originalData);
+                            }
+                        }
                     }
                 ]
             }],
-            buttons: [{
-                text: 'Закрыть',
-                handler: function() {
-                    this.up('window').close();
+            buttons: [
+                {
+                    text: 'Отмена',
+                    cls: 'product-card-button cancel-button',
+                    handler: function() {
+                        productCard.close();
+                    }
+                },
+                {
+                    text: 'Сохранить',
+                    cls: 'product-card-button save-button',
+                    formBind: true,
+                    handler: function() {
+                        me.saveProductChanges(productCard, record, originalData);
+                    }
                 }
-            }]
-        }).show();
+            ]
+        });
+        
+        productCard.originalData = originalData;
+        productCard.record = record;
+        productCard.show();
+    },
+
+    checkForChanges: function(productCard, originalData) {
+        var form = productCard.down('form');
+        var currentPrice = parseFloat(form.getForm().getFieldValues().price) || 0;
+        var currentQuantity = parseInt(form.getForm().getFieldValues().quantity) || 0;
+        
+        var hasChanges = (currentPrice !== originalData.price) || (currentQuantity !== originalData.quantity);
+        
+        var saveButton = productCard.down('button[text=Сохранить]');
+        if (saveButton) {
+            saveButton.setDisabled(!hasChanges);
+        }
+    },
+
+    saveProductChanges: function(productCard, record, originalData) {
+        var form = productCard.down('form');
+        var formValues = form.getForm().getFieldValues();
+
+        var hasChanges = (parseFloat(formValues.price) !== originalData.price) || 
+                        (parseInt(formValues.quantity) !== originalData.quantity);
+        
+        if (hasChanges) {
+            Ext.Msg.show({
+                title: 'Сохранение изменений',
+                msg: 'Обнаружены изменения в данных товара. Сохранить изменения?',
+                buttons: Ext.Msg.YESNO,
+                buttonText: {
+                    yes: 'Да',
+                    no: 'Нет'
+                },
+                fn: function(btn) {
+                    if (btn === 'yes') {    
+                        record.set('price', parseFloat(formValues.price));
+                        record.set('quantity', parseInt(formValues.quantity));
+                        
+                        record.commit();
+                        
+                        Ext.Msg.alert('Успех', 'Данные товара успешно сохранены!');
+                        
+                        productCard.close();
+                    }
+                }
+            });
+        } else {
+            Ext.Msg.alert('Информация', 'Изменений не обнаружено.');
+        }
     }
 });
