@@ -133,40 +133,13 @@ Ext.define('ProductsApp.view.Main', {
         var tabTitle = 'Товары ' + me.tabCounter++;
         
         try {
-            // Create a unique store for this tab with independent data
-            var productsData = me.getProductsData();
-            var independentData = [];
-            
-            // Create deep copy of each product
-            for (var i = 0; i < productsData.length; i++) {
-                var product = productsData[i];
-                independentData.push({
-                    id: product.id,
-                    name: product.name,
-                    description: product.description,
-                    price: product.price,
-                    quantity: product.quantity
-                });
-            }
-            
-            var tabStore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'name', 'description', 'price', 'quantity'],
-                pageSize: 5,
-                autoLoad: true,
-                proxy: {
-                    type: 'memory',
-                    data: independentData,
-                    enablePaging: true
-                }
-            });
-            
             var newTab = tabPanel.add({
                 title: tabTitle,
                 closable: true,
                 layout: 'fit',
                 items: [{
                     xtype: 'products-grid',
-                    store: tabStore
+                    tabId: 'tab_' + me.tabCounter
                 }]
             });
             tabPanel.setActiveTab(newTab);
